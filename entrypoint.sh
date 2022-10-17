@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 exporter() {
-   /shell_exporter --collector.textfile.directory ${{DIR} --web.listen-address ${PORT}
+   /shell_exporter --collector.textfile.directory ${DIR} --web.listen-address ${PORT}
 }
 
 crond() {
-    /usr/sbin/crond
+    /usr/sbin/crond -n 
 }
 
 main() {

@@ -27,15 +27,18 @@ RUN echo 'admin ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 WORKDIR /
 
 ENV DIR /exporters
-ENV PORT 9099
+ENV PORT ":9099"
 COPY --from=builder /workspace/shell_exporter .
 COPY entrypoint.sh /entrypoint.sh
 
 # Add Tini
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+#ENV TINI_VERSION v0.19.0
+#ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+COPY tini /tini
 
-RUN chmod +x /shell_exporter && chmod +x entrypoint.sh && chmod +x /tini
+RUN chmod +x /shell_exporter && chmod +x entrypoint.sh && chmod +x /tini && mkdir /exporters
+
+EXPOSE 9099
 
 ENTRYPOINT ["/tini", "--"]
 
