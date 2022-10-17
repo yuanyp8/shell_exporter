@@ -1,0 +1,3 @@
+# HELP client_log_monitor Tell the summury info
+# TYPE client_log_monitor gauge
+client_log_monitor{duration_tag="today_sofar"} 0
