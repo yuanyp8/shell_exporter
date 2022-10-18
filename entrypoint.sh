@@ -5,15 +5,17 @@ exporter() {
 }
 
 crond() {
-    /usr/sbin/crond -n 
+    /usr/sbin/cron &  
 }
 
 
 add_cron() {
-mkdir -p /var/spool/cron/
-cat >> /var/spool/cron/root <<EOF
-*/1 * * * * /cron.sh
-EOF
+#mkdir -p /var/spool/cron/
+#cat >> /var/spool/cron/root <<EOF
+#*/1 * * * * /cron.sh
+#EOF
+task='*/1 * * * * /cron.sh'
+echo "$(crontab -l)" | grep "^${task}$" &>/dev/null || echo -e "$(crontab -l)\n${task}" | crontab -
 chmod +x /cron.sh
 }
 

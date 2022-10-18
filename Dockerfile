@@ -18,22 +18,51 @@ COPY controller/ controller/
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -o shell_exporter main.go
 
 
-FROM docker.io/centos:7
+#FROM docker.io/centos:7
 
-RUN yum clean all && yum -y update && yum install -y net-tools iproute openssh-clients openssh-server crontabs which sudo
-RUN groupadd -g 500 admin && useradd -g 500 -u 500 -d /home/admin -m admin
-RUN echo 'admin ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+#RUN yum clean all && yum -y update && yum install -y net-tools iproute openssh-clients openssh-server crontabs which sudo
+#RUN groupadd -g 500 admin && useradd -g 500 -u 500 -d /home/admin -m admin
+#RUN echo 'admin ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-WORKDIR /
+#WORKDIR /
 
-ENV DIR /exporters
-ENV PORT ":9099"
-COPY --from=builder /workspace/shell_exporter .
-COPY entrypoint.sh /entrypoint.sh
+#ENV DIR /exporters
+#ENV PORT ":9099"
+#COPY --from=builder /workspace/shell_exporter .
+#COPY entrypoint.sh /entrypoint.sh
 
 # Add Tini
 #ENV TINI_VERSION v0.19.0
 #ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+
+#COPY tini /tini
+
+
+#RUN chmod +x /shell_exporter && chmod +x entrypoint.sh && chmod +x /tini && mkdir /exporters
+
+#EXPOSE 9099
+
+#ENTRYPOINT ["/tini", "--"]
+
+#CMD ["/entrypoint.sh"]
+
+
+
+
+FROM debian:stable
+
+WORKDIR /
+
+RUN apt-get update && apt-get -y --no-install-recommends install curl net-tools procps  cron &&  apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ENV DIR /exporters
+
+ENV PORT ":9099"
+
+COPY --from=builder /workspace/shell_exporter .
+
+COPY entrypoint.sh /entrypoint.sh
+
 COPY tini /tini
 
 RUN chmod +x /shell_exporter && chmod +x entrypoint.sh && chmod +x /tini && mkdir /exporters
