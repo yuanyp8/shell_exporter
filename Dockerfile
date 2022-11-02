@@ -22,7 +22,7 @@ FROM debian:stable
 
 WORKDIR /
 
-RUN apt-get update && apt-get -y --no-install-recommends install curl net-tools procps  cron &&  apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get -y --no-install-recommends install curl net-tools procps mariadb-client  cron &&  apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ENV DIR /exporters
 
